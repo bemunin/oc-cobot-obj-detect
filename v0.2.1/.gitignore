@@ -51,12 +51,8 @@ _build
 **/logs/*
 **/recordings/*
 
-# OmniCraft ros_ws
-**/devel/
-**/build/
-**/install/
-**/log/
+# USD models
+assets
 
-# OmniCraft Cobot
-**/config.local.toml
-**/environment.local.yml
+# omnicraft projects
+**/sim_config.local.toml

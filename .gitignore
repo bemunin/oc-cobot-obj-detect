@@ -55,7 +55,7 @@ _build
 assets
 
 # omnicraft projects
-sim_config.local.toml
+**/sim_config.local.toml
 
 # omnicraft ros
 **/devel/
