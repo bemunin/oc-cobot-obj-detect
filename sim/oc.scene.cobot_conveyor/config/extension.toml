@@ -1,0 +1,28 @@
+# https://docs.omniverse.nvidia.com/kit/docs/kit-manual/latest/guide/extensions_advanced.html#core-section
+[core]
+reloadable = true
+order = 0
+
+# https://docs.omniverse.nvidia.com/kit/docs/kit-manual/latest/guide/extensions_advanced.html#package-section
+[package]
+version = "0.1.0"
+category = "example"
+title = "Cobot Conveyor Scene"
+description = "An example scene to experiment moveit2 and isaac manipualtor workflow"
+authors = ["Titiwat Be Munintravong<tw.munin@gmail.com>"]
+repository = "https://github.com/bemunin/oc-cobot"
+keywords = ["ros2","moveit2"]
+changelog = "docs/CHANGELOG.md"
+readme = "docs/README.md"
+preview_image = "data/preview.png"
+icon = "data/icon.png"
+
+# https://docs.omniverse.nvidia.com/kit/docs/kit-manual/latest/guide/extensions_advanced.html#dependencies-section
+[dependencies]
+
+# https://docs.omniverse.nvidia.com/kit/docs/kit-manual/latest/guide/extensions_advanced.html#python-section
+[[python.module]]
+name = "oc.scene.cobot_conveyor"
+
+# https://docs.omniverse.nvidia.com/kit/docs/kit-manual/latest/guide/extensions_advanced.html#settings-section
+[settings]
