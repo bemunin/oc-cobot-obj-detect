@@ -609,6 +609,13 @@
         "*.kit": "toml",
         "*.rst": "restructuredtext"
     },
+
+    "files.exclude": {
+        "**/_isaac_sim/**": true,
+    },
+    "search.exclude": {
+        "**/_isaac_sim/**": true,
+    },
     "terminal.integrated.env.windows": {
         "NODE_OPTIONS": "--max-old-space-size=16184"
     },
