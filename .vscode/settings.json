@@ -595,7 +595,7 @@
         "name": "omni",
         "depth": 5,
         "includeAllSymbols": true
-        }
+        },
     ],
     // files to be ignored by the linter
     "files.watcherExclude": {
