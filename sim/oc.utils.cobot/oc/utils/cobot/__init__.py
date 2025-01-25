@@ -1,5 +1,6 @@
-from .bases.BaseSim import BaseSim
-from .bases.CreatorTask import CreatorTask
+from .bases.base_sim import BaseSim
+from .bases.creator_task import CreatorTask
+from .robots.franka_manager import FrankaManager
 
 
-__all__ = ["BaseSim", "CreatorTask"]
+__all__ = ["BaseSim", "CreatorTask", "FrankaManager"]

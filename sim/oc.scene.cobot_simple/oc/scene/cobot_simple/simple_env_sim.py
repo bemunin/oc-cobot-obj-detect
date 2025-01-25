@@ -7,7 +7,8 @@ class SimpleEnvSim(BaseSim):
         super().__init__()
 
     def set_up_scene(self, scene):
-        carb.log_info("Load Simple Env Sim")
+        self._world.scene.add_ground_plane()
+        carb.log_info("Add ground plane")
         return
 
     def post_reset(self):
