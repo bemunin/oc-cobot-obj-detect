@@ -18,4 +18,5 @@ fi
 
 PARENT_DIR="$(dirname "$(realpath "$0")")"
 echo "Parent directory: $PARENT_DIR"
-$ISAACSIM_DIR/isaac-sim.sh --ext-folder $PARENT_DIR --enable oc.scene.cobot_conveyor
+echo $PYTHONPATH
+$ISAACSIM_DIR/isaac-sim.sh --ext-folder $PARENT_DIR --enable oc.utils.cobot --enable oc.scene.cobot_simple
