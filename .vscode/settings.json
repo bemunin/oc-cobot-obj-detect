@@ -625,6 +625,7 @@
     },
     "python.analysis.userFileIndexingLimit": 8000,
     "editor.codeActionsOnSave": {
+        "source.organizeImports": "always",
         "source.fixAll.ruff": "explicit"
     },
     

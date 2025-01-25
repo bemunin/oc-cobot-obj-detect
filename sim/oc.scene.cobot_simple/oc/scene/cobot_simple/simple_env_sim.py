@@ -1,5 +1,6 @@
+from oc.utils.cobot import BaseSim  # isort:skip # type:ignore
+
 import carb
-from oc.utils.cobot import BaseSim  # type: ignore
 
 
 class SimpleEnvSim(BaseSim):
