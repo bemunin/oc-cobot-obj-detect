@@ -1,11 +1,19 @@
+from typing import Optional
+
+import numpy as np
 from omni.isaac.core.scenes import Scene
+from omni.isaac.core.tasks import BaseTask
 from omni.isaac.franka import Franka
 from omni.isaac.franka.controllers import PickPlaceController
 
-from ..bases.creator_task import CreatorTask
 
+class FrankaManager(BaseTask):
+    def __init__(self, name: str, offset: Optional[np.ndarray] = None):
+        super().__init__(name, offset)
+        self._franka: Franka = None
+        self._controller: PickPlaceController = None
+        self._enable_ros = False
 
-class FrankaManager(CreatorTask):
     def set_up_scene(self, scene: Scene):
         super().set_up_scene(scene)
         self._franka = Franka(prim_path="/World/Franka", name="franka")
@@ -19,4 +27,7 @@ class FrankaManager(CreatorTask):
         )
 
     def pre_step(self, time_step_index: int, simulation_time: float):
+        return
+
+    def _execute(self):
         return
