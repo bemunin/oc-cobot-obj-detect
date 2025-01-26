@@ -59,6 +59,7 @@ class BaseSim(object):
         Args:
             scene (Scene): [description]
         """
+        self._scene = scene
         return
 
     @abstractmethod

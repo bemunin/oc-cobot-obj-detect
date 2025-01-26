@@ -14,7 +14,6 @@ class EnvCreator(CreatorTask):
         pos_y = 0.15
 
         # cylinder
-
         height_m = 0.1
         radius_m = 0.02
         mass_kg = 0.1  # kg

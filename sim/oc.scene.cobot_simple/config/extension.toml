@@ -19,6 +19,7 @@ icon = "data/icon.png"
 
 # https://docs.omniverse.nvidia.com/kit/docs/kit-manual/latest/guide/extensions_advanced.html#dependencies-section
 [dependencies]
+"oc.utils.cobot" = { version = "~0.1.0" }
 
 # https://docs.omniverse.nvidia.com/kit/docs/kit-manual/latest/guide/extensions_advanced.html#python-section
 [[python.module]]
