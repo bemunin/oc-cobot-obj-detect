@@ -1,6 +1,10 @@
 import numpy as np
 from oc.utils.cobot import BaseSim
-from oc.utils.cobot.robots.franka_manager import FrankaManager, PickPlaceCmd
+from oc.utils.cobot.robots.franka_manager import (
+    FrankaManager,
+    PickPlaceCmd,
+    SetGripperCmd,
+)
 from omni.isaac.core.scenes import Scene
 from omni.isaac.menu import set_camera_view
 
@@ -24,6 +28,11 @@ class SimpleScene(BaseSim):
 
     def post_reset(self):
         franka: FrankaManager = self._world.get_task("franka_task")
-        franka.add_cmd(
-            PickPlaceCmd(object_name="cylinder", place_at=np.array([0.5, -0.5, 0.5]))
-        )
+        sequences = [
+            SetGripperCmd(state="open"),
+            PickPlaceCmd(object_name="cylinder", place_at=np.array([0.5, -0.5, 0.08])),
+            SetGripperCmd(state="open"),
+            PickPlaceCmd(object_name="cube", place_at=np.array([0.5, 0.5, 0.08])),
+        ]
+        for cmd in sequences:
+            franka.add_cmd(cmd)

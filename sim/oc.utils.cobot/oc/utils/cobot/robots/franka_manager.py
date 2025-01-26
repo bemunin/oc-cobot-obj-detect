@@ -5,6 +5,7 @@ import numpy as np
 from oc.utils.cobot import obj_utils
 from omni.isaac.core.scenes import Scene
 from omni.isaac.core.tasks import BaseTask
+from omni.isaac.core.utils.types import ArticulationAction
 from omni.isaac.franka import Franka
 from omni.isaac.franka.controllers import PickPlaceController
 
@@ -13,6 +14,12 @@ from omni.isaac.franka.controllers import PickPlaceController
 class PickPlaceCmd:
     object_name: str
     place_at: np.ndarray
+
+
+@dataclass
+class SetGripperCmd:
+    state: Optional[str] = "open"  # open or close
+    position: Optional[float] = None
 
 
 class FrankaManager(BaseTask):
@@ -51,7 +58,31 @@ class FrankaManager(BaseTask):
 
         cmd = self._cmds[self._cmd_pointer]
 
-        if type(cmd) is PickPlaceCmd:
+        if type(cmd) is SetGripperCmd:
+            cmd = SetGripperCmd(**asdict(cmd))
+
+            target_gripper_pos = None
+            if cmd.position is not None:
+                target_gripper_pos = np.clip(cmd.position, 0, 0.04)
+            elif cmd.state == "close":
+                target_gripper_pos = 0
+            else:
+                target_gripper_pos = 0.04
+
+            action = ArticulationAction(
+                joint_positions=np.full(2, target_gripper_pos),
+                joint_indices=np.array([7, 8]),
+            )
+            self._franka.apply_action(action)
+
+            if np.allclose(
+                self._franka.gripper.get_joint_positions(),
+                target_gripper_pos,
+                atol=1e-3,
+            ):
+                self._cmd_pointer += 1
+
+        elif type(cmd) is PickPlaceCmd:
             cmd = PickPlaceCmd(**asdict(cmd))
             target = self._scene.get_object(cmd.object_name)
 
@@ -81,7 +112,7 @@ class FrankaManager(BaseTask):
                 self._pp_controller.reset()
                 self._cmd_pointer += 1
 
-    def add_cmd(self, cmd: PickPlaceCmd):
+    def add_cmd(self, cmd: PickPlaceCmd | SetGripperCmd):
         self._cmds.append(cmd)
 
     @property
