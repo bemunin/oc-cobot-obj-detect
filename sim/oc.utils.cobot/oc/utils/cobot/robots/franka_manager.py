@@ -98,7 +98,6 @@ class FrankaManager(BaseTask):
                 atol=1e-3,
             ):
                 self._cmd_pointer += 1
-
         elif type(cmd) is PickPlaceCmd:
             cmd = PickPlaceCmd(**asdict(cmd))
             target = self._scene.get_object(cmd.object_name)
@@ -128,7 +127,6 @@ class FrankaManager(BaseTask):
             if self._pp_controller.is_done():
                 self._pp_controller.reset()
                 self._cmd_pointer += 1
-
         elif type(cmd) is DelayCmd:
             cmd = DelayCmd(**asdict(cmd))
             if simulation_time >= cmd.time_sec:
