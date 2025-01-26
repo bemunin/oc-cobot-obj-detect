@@ -9,7 +9,6 @@ class FrankaManager(CreatorTask):
     def set_up_scene(self, scene: Scene):
         super().set_up_scene(scene)
         self._franka = Franka(prim_path="/World/Franka", name="franka")
-
         scene.add(self._franka)
 
     def post_reset(self):
