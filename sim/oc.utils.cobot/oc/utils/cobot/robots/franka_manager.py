@@ -1,8 +1,10 @@
+from omni.isaac.core.scenes import Scene
+
 from ..bases.creator_task import CreatorTask
 
 
 class FrankaManager(CreatorTask):
-    def set_up_scene(self):
+    def set_up_scene(self, scene: Scene):
         pass
 
     def post_reset(self):

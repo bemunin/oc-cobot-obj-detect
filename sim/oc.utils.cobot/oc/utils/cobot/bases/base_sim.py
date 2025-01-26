@@ -9,7 +9,7 @@ from omni.isaac.core.utils.stage import create_new_stage_async
 
 class BaseSim(object):
     def __init__(self) -> None:
-        self._world = None
+        self._world: World = None
         self._world_settings = {
             "physics_dt": 1.0 / 60.0,
             "stage_units_in_meters": 1.0,
