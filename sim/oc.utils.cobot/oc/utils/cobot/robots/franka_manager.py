@@ -20,4 +20,4 @@ class FrankaManager(CreatorTask):
         )
 
     def pre_step(self, time_step_index: int, simulation_time: float):
-        pass
+        return
