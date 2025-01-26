@@ -5,9 +5,10 @@ import numpy as np
 from oc.utils.cobot import obj_utils
 from omni.isaac.core.scenes import Scene
 from omni.isaac.core.tasks import BaseTask
+from omni.isaac.core.utils.rotations import euler_angles_to_quat
 from omni.isaac.core.utils.types import ArticulationAction
 from omni.isaac.franka import Franka
-from omni.isaac.franka.controllers import PickPlaceController
+from omni.isaac.franka.controllers import PickPlaceController, RMPFlowController
 
 
 @dataclass
@@ -20,6 +21,13 @@ class PickPlaceCmd:
 class SetGripperCmd:
     state: Optional[str] = "open"  # open or close
     position: Optional[float] = None
+
+
+@dataclass
+class MoveCmd:
+    state: Optional[str] = None  # name of pre defined pose: [standby]
+    to_point: np.ndarray = None
+    rotation_deg: np.ndarray = None
 
 
 @dataclass
@@ -47,8 +55,12 @@ class FrankaManager(BaseTask):
             self._franka.gripper.joint_closed_positions
         )
         self._pp_controller = PickPlaceController(
-            name="pick_place_controller",
+            name="pp_controller",
             gripper=self._franka.gripper,
+            robot_articulation=self._franka,
+        )
+        self._rmpf_controller = RMPFlowController(
+            name="rmpf_controller",
             robot_articulation=self._franka,
         )
 
@@ -120,6 +132,42 @@ class FrankaManager(BaseTask):
         elif type(cmd) is DelayCmd:
             cmd = DelayCmd(**asdict(cmd))
             if simulation_time >= cmd.time_sec:
+                self._cmd_pointer += 1
+        elif type(cmd) is MoveCmd:
+            cmd = MoveCmd(**asdict(cmd))
+
+            target = {}
+
+            if cmd.state == "standby":
+                target["target_end_effector_position"] = np.array([0.39, 0, 0.45])
+            elif cmd.to_point is not None:
+                target["target_end_effector_position"] = cmd.to_point
+            else:
+                target["target_end_effector_position"] = np.array([0.39, 0, 0])
+
+            if cmd.rotation_deg is not None:
+                rot_quat = euler_angles_to_quat(cmd.rotation_deg, degrees=True)
+                target["target_end_effector_orientation"] = rot_quat
+
+            action = self._rmpf_controller.forward(**target)
+
+            self._franka.apply_action(action)
+
+            # check if the action is done
+            eef_pos, eef_orient = self._franka.end_effector.get_world_pose()
+
+            is_pos_done = np.allclose(
+                eef_pos, target["target_end_effector_position"], atol=0.06
+            )
+            is_orient_done = True
+
+            if cmd.rotation_deg is not None:
+                is_orient_done = np.allclose(
+                    eef_orient, target["target_end_effector_orientation"], atol=0.06
+                )
+
+            if is_pos_done and is_orient_done:
+                self._rmpf_controller.reset()
                 self._cmd_pointer += 1
 
     def add_cmd(self, cmd: PickPlaceCmd | SetGripperCmd):
