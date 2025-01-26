@@ -1,6 +1,7 @@
 import numpy as np
 from oc.utils.cobot import BaseSim
 from oc.utils.cobot.robots.franka_manager import (
+    DelayCmd,
     FrankaManager,
     PickPlaceCmd,
     SetGripperCmd,
@@ -30,6 +31,7 @@ class SimpleScene(BaseSim):
         franka: FrankaManager = self._world.get_task("franka_task")
         sequences = [
             SetGripperCmd(state="open"),
+            DelayCmd(time_sec=0.5),
             PickPlaceCmd(object_name="cylinder", place_at=np.array([0.5, -0.5, 0.08])),
             SetGripperCmd(state="open"),
             PickPlaceCmd(object_name="cube", place_at=np.array([0.5, 0.5, 0.08])),

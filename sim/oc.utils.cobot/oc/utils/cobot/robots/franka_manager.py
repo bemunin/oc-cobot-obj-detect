@@ -22,6 +22,11 @@ class SetGripperCmd:
     position: Optional[float] = None
 
 
+@dataclass
+class DelayCmd:
+    time_sec: float
+
+
 class FrankaManager(BaseTask):
     def __init__(self, name: str, offset: Optional[np.ndarray] = None):
         super().__init__(name, offset)
@@ -39,7 +44,7 @@ class FrankaManager(BaseTask):
 
     def post_reset(self):
         self._franka.gripper.set_joint_positions(
-            self._franka.gripper.joint_opened_positions
+            self._franka.gripper.joint_closed_positions
         )
         self._pp_controller = PickPlaceController(
             name="pick_place_controller",
@@ -49,10 +54,10 @@ class FrankaManager(BaseTask):
 
     def pre_step(self, time_step_index: int, simulation_time: float):
         if not self._enable_ros:
-            self._execute()
+            self._execute(time_step_index, simulation_time)
 
     # Helpers
-    def _execute(self):
+    def _execute(self, time_step_index: int, simulation_time: float):
         if self._cmd_pointer >= len(self._cmds):
             return
 
@@ -110,6 +115,11 @@ class FrankaManager(BaseTask):
 
             if self._pp_controller.is_done():
                 self._pp_controller.reset()
+                self._cmd_pointer += 1
+
+        elif type(cmd) is DelayCmd:
+            cmd = DelayCmd(**asdict(cmd))
+            if simulation_time >= cmd.time_sec:
                 self._cmd_pointer += 1
 
     def add_cmd(self, cmd: PickPlaceCmd | SetGripperCmd):
