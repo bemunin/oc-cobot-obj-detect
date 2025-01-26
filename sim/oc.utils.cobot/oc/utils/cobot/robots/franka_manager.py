@@ -2,6 +2,7 @@ from dataclasses import asdict, dataclass
 from typing import Optional
 
 import numpy as np
+from oc.utils.cobot import obj_utils
 from omni.isaac.core.scenes import Scene
 from omni.isaac.core.tasks import BaseTask
 from omni.isaac.franka import Franka
@@ -60,7 +61,8 @@ class FrankaManager(BaseTask):
             position, _ = target.get_world_pose()
 
             # adjust pick at the top of the object
-            height_m = position[2] * 2
+            dimen = obj_utils.get_dimension(target.prim_path)
+            height_m = dimen[-1]
             est_gripper_length = 0.04
             collision_offset = 0.01
 

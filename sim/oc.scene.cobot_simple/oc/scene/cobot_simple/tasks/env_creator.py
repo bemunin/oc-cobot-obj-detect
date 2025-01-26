@@ -36,7 +36,7 @@ class EnvCreator(CreatorTask):
                 prim_path="/World/Cube",
                 name="cube",
                 position=np.array([pos_x, -pos_y, size_m / 2.0]),
-                scale=np.ones(3) * size_m,
+                size=size_m,
                 mass=mass_kg,
             )
         )

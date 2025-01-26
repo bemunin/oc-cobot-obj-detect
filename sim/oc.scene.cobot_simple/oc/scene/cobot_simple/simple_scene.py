@@ -25,5 +25,5 @@ class SimpleScene(BaseSim):
     def post_reset(self):
         franka: FrankaManager = self._world.get_task("franka_task")
         franka.add_cmd(
-            PickPlaceCmd(object_name="cube", place_at=np.array([0.5, -0.5, 0.5]))
+            PickPlaceCmd(object_name="cylinder", place_at=np.array([0.5, -0.5, 0.5]))
         )
