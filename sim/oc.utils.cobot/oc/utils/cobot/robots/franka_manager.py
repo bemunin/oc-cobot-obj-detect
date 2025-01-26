@@ -168,7 +168,7 @@ class FrankaManager(BaseTask):
                 self._rmpf_controller.reset()
                 self._cmd_pointer += 1
 
-    def add_cmd(self, cmd: PickPlaceCmd | SetGripperCmd):
+    def add_cmd(self, cmd: PickPlaceCmd | SetGripperCmd | MoveCmd | DelayCmd):
         self._cmds.append(cmd)
 
     @property
