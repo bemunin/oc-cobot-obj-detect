@@ -13,7 +13,7 @@ from omni.isaac.menu import set_camera_view
 from .tasks import EnvCreator
 
 
-class SimpleScene(BaseSim):
+class SimpleSim(BaseSim):
     def __init__(self):
         super().__init__()
 
