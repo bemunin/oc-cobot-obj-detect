@@ -71,7 +71,7 @@ class Extension(omni.ext.IExt):
                 )
                 ui.Spacer(height=5)
                 ui_utils.cb_builder(
-                    label="ROS",
+                    label="ROS Connection",
                     default_val=False,
                     tooltip="click to enable ros connection",
                     on_clicked_fn=on_change_enable_ros,
