@@ -2,6 +2,7 @@ from dataclasses import asdict, dataclass
 from typing import Optional
 
 import numpy as np
+import omni.graph.core as og
 from oc.utils.cobot import obj_utils
 from omni.isaac.core.scenes import Scene
 from omni.isaac.core.tasks import BaseTask
@@ -63,6 +64,8 @@ class FrankaManager(BaseTask):
             name="rmpf_controller",
             robot_articulation=self._franka,
         )
+
+        self._build_ros_omnigraph()
 
     def pre_step(self, time_step_index: int, simulation_time: float):
         if not self._enable_ros:
@@ -178,3 +181,28 @@ class FrankaManager(BaseTask):
     @enable_ros.setter
     def enable_ros(self, value: bool):
         self._enable_ros = value
+
+    def _build_ros_omnigraph(self):
+        keys = og.Controller.Keys
+        og.Controller.edit(
+            {
+                "graph_path": "/ros2_graph",
+                "evaluator_name": "execution",
+            },
+            {
+                keys.CREATE_NODES: [
+                    ("tick", "omni.graph.action.OnPlaybackTick"),
+                    ("ros_context", "omni.isaac.ros2_bridge.ROS2Context"),
+                    ("sim_time", "omni.isaac.core_nodes.IsaacReadSimulationTime"),
+                    ("sub_joints", "omni.isaac.ros2_bridge.ROS2SubscribeJointState"),
+                    ("pub_clock", "omni.isaac.ros2_bridge.ROS2PublishClock"),
+                    ("pub_joints", "omni.isaac.ros2_bridge.ROS2PublishJointState"),
+                    (
+                        "sim_controller",
+                        "omni.isaac.core_nodes.IsaacArticulationController",
+                    ),
+                ],
+                keys.SET_VALUES: [],
+                keys.CONNECT: [],
+            },
+        )
