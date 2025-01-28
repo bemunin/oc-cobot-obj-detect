@@ -61,6 +61,7 @@ class Extension(omni.ext.IExt):
         )
 
         on_click_run_test = functools.partial(self._handle_click_run_test)
+        on_change_enable_ros = functools.partial(self._handle_change_enable_ros)
 
         with self._window.frame:
             with ui.VStack(spacing=5, height=0):
@@ -73,6 +74,7 @@ class Extension(omni.ext.IExt):
                     label="ROS",
                     default_val=False,
                     tooltip="click to enable ros connection",
+                    on_clicked_fn=on_change_enable_ros,
                 )
                 ui.Spacer(height=5)
 
@@ -86,8 +88,10 @@ class Extension(omni.ext.IExt):
     def _handle_click_run_test(self):
         world = World.instance()
         franka: FrankaManager = world.get_task("franka_task")
+
         if not franka:
             return
+
         sequences = [
             SetGripperCmd(state="open"),
             DelayCmd(time_sec=0.5),
@@ -99,3 +103,11 @@ class Extension(omni.ext.IExt):
         ]
         for cmd in sequences:
             franka.add_cmd(cmd)
+
+    def _handle_change_enable_ros(self, value: bool):
+        world = World.instance()
+        franka: FrankaManager = world.get_task("franka_task")
+        if not franka:
+            return
+
+        franka.enable_ros = value
